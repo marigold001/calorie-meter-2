@@ -13,12 +13,12 @@
 <body>
     <div id="app">
         <h1 class="title"><i class="fas fa-heartbeat"></i>Vue.js Calorie Counter</h1>
-        <div class="entry">
-            <div>Description</div>
-            <div>Calories</div>
-            <div>Fat</div>
-            <div>Carbs</div>
-            <div>Protein</div>
+        <div class="entry header">
+            <div class="long">Description</div>
+            <div class="short">Calories</div>
+            <div class="short">Fat</div>
+            <div class="short">Carbs</div>
+            <div class="short">Protein</div>
         </div>
 
         <div class="entry" v-for="(entry, index) in entries">
