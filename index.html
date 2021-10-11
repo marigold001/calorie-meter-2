@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/fe8209d2ba.js" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+    <div id="app">
+        <h1 class="title"><i class="fas fa-heartbeat"></i>Vue.js Calorie Counter</h1>
+        <div class="entry">
+            <div>Description</div>
+            <div>Calories</div>
+            <div>Fat</div>
+            <div>Carbs</div>
+            <div>Protein</div>
+        </div>
+
+        <div class="entry" v-for="(entry, index) in entries">
+            <input type="text" name="description-{{entry.id}}" v-model="entry.description" class="long" v-on:keyup.enter="saveEntry">
+            <input type="number" name="calories-{{entry.id}}" v-model="entry.calories" class="short" v-on:keyup.enter="saveEntry">
+            <input type="number" name="fat-{{entry.id}}" v-model="entry.fat" class="short" v-on:keyup.enter="saveEntry">
+            <input type="number" name="carbs-{{entry.id}}" v-model="entry.carbs" class="short" v-on:keyup.enter="saveEntry">
+            <input type="number" name="protein-{{entry.id}}" v-model="entry.protein" class="short" v-on:keyup.enter="saveEntry">
+            <button class="material-delete" v-on:click="removeEntry(index)">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <div class="totals">
+            <div class="long">Totals:</div>
+            <div class="short">{{totalCalories}}</div>
+            <div class="short">{{totalFat}}</div>
+            <div class="short">{{totalCarbs}}</div>
+            <div class="short">{{totalProtein}}</div>
+        </div>
+
+        <div class="new">
+            <input type="text" v-model="newDescription" v-on:keyup.enter="addEntry" class="long" placeholder="Description">
+            <input type="number" v-model="newCalories" v-on:keyup.enter="addEntry" class="short" placeholder="Calories">
+            <input type="number" v-model="newFat" v-on:keyup.enter="addEntry" class="short" placeholder="Fat">
+            <input type="number" v-model="newCarbs" v-on:keyup.enter="addEntry" class="short" placeholder="Carbs">
+            <input type="number" v-model="newProtein" v-on:keyup.enter="addEntry" class="short" placeholder="Protein">
+            <button class="material-button" v-on:click="addEntry()">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const App = {
+            data() {
+                return {
+                    entries: [
+                        {
+                            description: 'Krompir',
+                            calories: 80,
+                            fat: 12,
+                            carbs: 24,
+                            protein: 8
+                        },
+                        {
+                            description: 'Spanac',
+                            calories: 52,
+                            fat: 4,
+                            carbs: 36,
+                            protein: 4
+                        },
+                        {
+                            description: 'Paradajz',
+                            calories: 24,
+                            fat: 2,
+                            carbs: 12,
+                            protein: 2
+                        }
+                    ],
+                    totalCalories: '',
+                    totalFat: '',
+                    totalCarbs: '',
+                    totalProtein: '',
+                    newDescription: '',
+                    newCalories: '',
+                    newFat: '',
+                    newCarbs:'',
+                    newProtein: ''
+                }
+            },
+            methods: {
+                addEntry: function() {
+                    var description = this.newDescription.trim()
+                    var calories = parseInt(this.newCalories) || 0
+                    var fat = parseInt(this.newFat) || 0
+                    var carbs = parseInt(this.newCarbs) || 0
+                    var protein = parseInt(this.newProtein) || 0
+
+                    if(description && calories) {
+                        this.entries.push(
+                            {
+                                description: description,
+                                calories: calories,
+                                fat: fat,
+                                carbs: carbs,
+                                protein: protein
+                            }
+                        ),
+                        this.newDescription = ''
+                        this.newCalories = '',
+                        this.newFat = '',
+                        this.newCarbs = '',
+                        this.newProtein = ''
+                        this.calculateTotals()
+                    } else {
+                        alert("Enter a description and add calories!")
+                    }
+                },
+                removeEntry: function(index) {
+                    this.entries.splice(index, 1)
+                    this.calculateTotals()
+                },
+                saveEntry: function() {
+                    this.calculateTotals()
+                },
+                calculateTotals: function() {
+                    this.totalCalories = this.parseTotals(this.entries,'calories')
+                    this.totalFat = this.parseTotals(this.entries,'fat')
+                    this.totalCarbs = this.parseTotals(this.entries,'carbs')
+                    this.totalProtein = this.parseTotals(this.entries,'protein')
+                },
+                parseTotals(array, element) {
+                    var sum = 0
+                    array.forEach(entry => {
+                        sum = sum + entry[element]
+                    }, sum, element);
+                    return sum
+                }
+            },
+            mounted() {
+                this.calculateTotals()
+            }
+        }
+
+        Vue.createApp(App).mount("#app")
+    </script>
+</body>
+</html>
